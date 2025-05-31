@@ -31,26 +31,3 @@ mini/
 ├── manage.py            # Django entry point
 └── db.sqlite3           # SQLite database
 ```
-
-## 🔧 Setup Instructions
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/yourusername/smallbiz.git
-   cd smallbiz/mini
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install django
-   ```
-
-3. **Run the server**
-   ```bash
-   python manage.py runserver
-   ```
-
-4. **Open in browser**
-   ```
-   http://127.0.0.1:8000/
-   ```
