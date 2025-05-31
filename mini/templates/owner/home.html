@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --card-bg: #ffffff;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 0px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 20%);
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .sidebar-collapsed .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+            width: 100%;
+        }
+
+        /* Side Navigation Styles */
+        nav.sidebar {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow);
+            height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+        }
+
+        .sidebar-collapsed nav.sidebar {
+            transform: translateX(-100%);
+        }
+
+        nav.sidebar ul {
+            list-style-type: none;
+            padding: 1.25rem;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        nav.sidebar ul li {
+            width: 100%;
+        }
+
+        nav.sidebar ul li a {
+            text-decoration: none;
+            color: var(--text);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: block;
+            position: relative;
+            overflow: hidden;
+            font-size: 1.05rem;
+        }
+
+        nav.sidebar ul li a:before {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav.sidebar ul li a:hover {
+            color: var(--primary);
+            background-color: rgba(79, 70, 229, 0.1);
+            transform: translateX(5px);
+        }
+
+        nav.sidebar ul li a:hover:before {
+            background-color: var(--primary);
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 200;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+        }
+
+        .sidebar-collapsed .hamburger-menu {
+            left: 1rem;
+        }
+
+        .hamburger-menu:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.1);
+        }
+
+        .business-link {
+            margin-top: 0.75rem;
+            display: block;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            background-color: rgba(79, 70, 229, 0.1);
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .business-link:hover {
+            color: white;
+            background-color: var(--primary);
+            transform: translateX(5px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Page content container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-5px);
+        }
+
+        .container h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .container h2:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        /* Chart container styling */
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Business ID styling */
+        nav.sidebar ul li p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            padding-left: 1.25rem;
+        }
+
+        /* Message styling */
+        .message-container {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: var(--warning);
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 280px;
+                --sidebar-collapsed-width: 0;
+            }
+            
+            body {
+                overflow-x: hidden;
+            }
+            
+            body:not(.sidebar-toggled) {
+                margin-left: 0;
+            }
+            
+            body:not(.sidebar-toggled) nav.sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .sidebar-collapsed .main-content {
+                margin-left: 0;
+            }
+            
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="sidebar-collapsed">
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger-menu" id="menuToggle">
+        ☰
+    </div>
+
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            {% if not has_approved_business %}
+            <li><a href="/addbusiness">Add Business</a></li>
+            {% endif %}
+            <li><a href="/manage_business">Manage Business</a></li>
+            <li><a href="/reviews">Manage Reviews</a></li>
+            <li><a href="/contact">Contact US</a></li>
+            {% for business in businesses %}
+                <li>
+                    <a href="{% url 'visited_users' business.id %}" class="business-link">View Visitors</a>
+                </li>
+            {% endfor %}
+            <li><a href="{% url 'ologout' %}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="welcome-header">
+                <h1>Welcome {{ user_email }}</h1>
+            </div>    
+        </div>
+        
+        {% if has_approved_business %}
+        <div class="container">
+            <h2>Likes for Business</h2>
+            <div class="chart-container">
+                <canvas id="likesChart"></canvas>
+            </div>
+        </div>
+        {% else %}
+        <div class="container">
+            <div class="message-container">
+                You don't have any approved businesses yet. Once your business is approved, you'll see analytics here.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Toggle sidebar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const body = document.body;
+            
+            // Open sidebar on page load for larger screens
+            if (window.innerWidth > 768) {
+                body.classList.remove('sidebar-collapsed');
+            }
+            
+            menuToggle.addEventListener('click', function() {
+                body.classList.toggle('sidebar-collapsed');
+            });
+            
+            {% if has_approved_business %}
+            // Animation function for chart
+            const animateChart = {
+                onComplete: function() {
+                    const chartInstance = this.chart;
+                    const ctx = chartInstance.ctx;
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.font.size, 'normal', Chart.defaults.font.family);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+
+                    this.data.datasets.forEach(function(dataset, i) {
+                        const meta = chartInstance.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            const data = dataset.data[index];
+                            ctx.fillStyle = '#4f46e5';
+                            ctx.fillText(data, bar.x, bar.y - 5);
+                        });
+                    });
+                }
+            };
+
+            // Create gradient backgrounds
+            var ctx = document.getElementById('likesChart').getContext('2d');
+            
+            // Create gradients for each bar
+            function createGradients(ctx, data) {
+                const gradients = [];
+                const colors = [
+                    ['#4f46e5', '#8b5cf6'],
+                    ['#06b6d4', '#3b82f6'],
+                    ['#8b5cf6', '#ec4899'],
+                    ['#10b981', '#06b6d4'],
+                    ['#f59e0b', '#ef4444'],
+                    ['#6366f1', '#8b5cf6'],
+                    ['#ec4899', '#f43f5e'],
+                    ['#14b8a6', '#10b981'],
+                    ['#f97316', '#f59e0b'],
+                    ['#8b5cf6', '#6366f1']
+                ];
+                
+                for (let i = 0; i < data.length; i++) {
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, colors[i % colors.length][0]);
+                    gradient.addColorStop(1, colors[i % colors.length][1]);
+                    gradients.push(gradient);
+                }
+                
+                return gradients;
+            }
+            
+            // Get data from template
+            const chartData = {{ data|safe }};
+            const chartLabels = {{ labels|safe }};
+            
+            // Create gradients
+            const gradients = createGradients(ctx, chartData);
+            
+            var likesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Total Likes',
+                        data: chartData,
+                        backgroundColor: gradients,
+                        borderColor: gradients,
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        hoverBackgroundColor: '#4f46e5'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Number of Likes',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Businesses',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            padding: 10,
+                            cornerRadius: 6,
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.label || '';
+                                    var value = context.raw || 0;
+                                    var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    var percentage = Math.round((value / total) * 100);
+                                    return label + ': ' + value + ' likes (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8,
+                    layout: {
+                        padding: {
+                            top: 20
+                        }
+                    }
+                },
+                plugins: [animateChart]
+            });
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

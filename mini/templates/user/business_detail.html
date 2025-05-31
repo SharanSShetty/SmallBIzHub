@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ business.name }} - Small BiZ Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --background: #ffffff;
+            --card-bg: #f8f9fa;
+            --text: #2c3e50;
+            --text-light: #34495e;
+            --border: #ddd;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .business-details {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .business-details h1 {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .business-details p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .business-details p:hover {
+            transform: translateX(5px);
+        }
+
+        .business-details strong {
+            color: #2980b9;
+        }
+
+        .call-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .call-button:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .call-button i {
+            margin-right: 8px;
+        }
+
+        .location-section, .images-section, .hours-section {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .location-section:hover, .images-section:hover, .hours-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .location-section h2, .images-section h2, .hours-section h2 {
+            color: var(--text);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .location-section h2::before {
+            content: "📍";
+            font-size: 1.5rem;
+        }
+
+        .images-section h2::before {
+            content: "📸";
+            font-size: 1.5rem;
+        }
+
+        .hours-section h2::before {
+            content: "⏰";
+            font-size: 1.5rem;
+        }
+
+        .location-section a {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .location-section a:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .thumbnail-container {
+            position: relative;
+            padding-bottom: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: filter 0.3s ease;
+        }
+
+        .thumbnail:hover {
+            filter: brightness(1.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--nav-bg);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 90%;
+            max-height: 90vh;
+            top: 50%;
+            transform: translateY(-50%) scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 16px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 24px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Normal Save Button */
+        .save-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            margin-top: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .save-btn:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Action buttons container */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .business-details {
+                padding: 1rem;
+            }
+
+            .business-details h1 {
+                font-size: 2rem;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+
+            .back-button {
+                padding: 10px;
+                font-size: 20px;
+            }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+            --text-light: #a7a7a7;
+            --border: #333;
+            --nav-bg: rgba(30, 30, 30, 0.95);
+        }
+
+        body.dark-mode .search-input {
+            background: var(--card-bg);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .review-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .review {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            padding: 8px;
+        }
+
+        .messages {
+            margin: 10px 0;
+            padding: 10px;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Reviews Modal Styles */
+        #viewAllReviewsBtn {
+            margin-left: 10px;
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #viewAllReviewsBtn:hover {
+            background-color: #45a049;
+        }
+
+        .reviews-modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-reviews {
+            color: var(--text);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-reviews:hover {
+            color: #3498db;
+        }
+
+        .all-reviews-container {
+            margin-top: 20px;
+        }
+
+        .all-reviews-container .review {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .all-reviews-container .review:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .all-reviews-container .review:last-child {
+            border-bottom: none;
+        }
+
+        body.dark-mode .reviews-modal-content {
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="business-details">
+        <h1>{{ business.name }}</h1>
+
+        <p><strong>Shop:</strong> {{ business.shop }}</p>
+        <p>
+            <strong>Mobile Number:</strong>
+            <a href="tel:{{ business.mobile_number }}" class="call-button">
+                <i class="fas fa-phone-alt"></i> Call Now
+            </a>
+        </p>
+        <p><strong>Business Type:</strong> {{ business.business_type }}</p>
+        <p><strong>Address:</strong> {{ business.business_address }}</p>
+        <p><strong>Likes:</strong> {{ business.total_likes }}</p>
+        <p><strong>Description:</strong> {{ business.description }}</p>
+
+        <!-- Add save button as a normal button -->
+        <button class="save-btn" id="save-btn-{{ business.id }}" data-business="{{ business.id }}">
+            {% if is_saved %} ❌ Unsave {% else %} 💾 Save {% endif %}
+        </button>
+
+        <div class="location-section">
+            <h2>Location</h2>
+            {% if business.google_map_location %}
+                <a href="{{ business.google_map_location }}" target="_blank">
+                    View Location on Google Maps
+                </a>
+            {% else %}
+                <p>No<p>No location available.</p>
+                {% endif %}
+            </div>
+    
+            <div class="images-section">
+                <h2>Gallery</h2>
+                {% if business.images.all %}
+                    <div class="images-grid">
+                        {% for image in business.images.all %}
+                            <div class="thumbnail-container">
+                                <img
+                                    src="{{ image.image.url }}"
+                                    alt="{{ business.name }} - Image {{ forloop.counter }}"
+                                    class="thumbnail"
+                                    onclick="openModal({{ forloop.counter0 }})"
+                                >
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No images available.</p>
+                {% endif %}
+            </div>
+    
+            <div class="hours-section">
+                <h2>Hours of Operation</h2>
+                <p>{{ business.hours_of_operation }}</p>
+            </div>
+    
+            <div class="review-section">
+                <h2>Reviews</h2>
+    
+                <!-- Display success or error messages -->
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+    
+                <!-- Review Form with View All Reviews Button -->
+                {% if request.session.username %}
+                    <form method="post" action="{% url 'post_review' business.id %}" class="review-form">
+                        {% csrf_token %}
+                        <textarea name="content" rows="3" placeholder="Write your review..." required></textarea>
+                        <br>
+                        <div class="action-buttons">
+                            <button type="submit">Post Review</button>
+                            <button type="button" id="viewAllReviewsBtn">View All Reviews</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p>You must be logged in to post a review. <a href="{% url 'login' %}">Login here</a></p>
+                    <button type="button" id="viewAllReviewsBtn">View All Reviews</button>
+                {% endif %}
+            </div>
+        </div>
+    
+        <!-- Image Modal -->
+        <div id="imageModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <button class="nav-button prev" onclick="changeImage(-1)">&#10094;</button>
+            <img class="modal-content" id="modalImage">
+            <button class="nav-button next" onclick="changeImage(1)">&#10095;</button>
+            <div class="image-counter" id="imageCounter"></div>
+        </div>
+    
+        <!-- Reviews Modal -->
+        <div id="reviewsModal" class="modal">
+            <div class="reviews-modal-content">
+                <span class="close-reviews">&times;</span>
+                <h2>All Reviews</h2>
+                <div class="all-reviews-container">
+                    {% for review in reviews %}
+                        <div class="review">
+                            <strong>{{ review.user.username }}</strong>
+                            <p>{{ review.content }}</p>
+                            <small>{{ review.created_at }}</small>
+                        </div>
+                    {% empty %}
+                        <p>No reviews yet. Be the first to review!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+        <button class="back-button" onclick="window.location.href='{% url 'dashboard' %}';">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    
+        <script>
+            document.querySelectorAll('.save-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    let businessId = this.dataset.business;
+                    let saveBtn = this;
+    
+                    // Disable button temporarily to prevent multiple clicks
+                    saveBtn.disabled = true;
+                    saveBtn.style.opacity = '0.6';
+    
+                    fetch(`/users/save_business/${businessId}/`, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message); // Show message (Saved/Unsaved)
+    
+                        if (data.message === 'Saved') {
+                            saveBtn.innerHTML = '❌ Unsave';
+                        } else {
+                            saveBtn.innerHTML = '💾 Save';
+                        }
+    
+                        // Enable button again after action completes
+                        saveBtn.disabled = false;
+                        saveBtn.style.opacity = '1';
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        saveBtn.disabled = false;
+                        saveBtn.style.opacity = '1';
+                    });
+                });
+            });
+    
+            // Image Gallery Modal
+            const images = [
+                {% for image in business.images.all %}
+                    "{{ image.image.url }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+    
+            let currentImageIndex = 0;
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const counter = document.getElementById("imageCounter");
+    
+            function updateImageCounter() {
+                counter.textContent = `Image ${currentImageIndex + 1} of ${images.length}`;
+            }
+    
+            function openModal(imageIndex) {
+                modal.style.display = "block";
+                setTimeout(() => modal.classList.add('show'), 10);
+                currentImageIndex = imageIndex;
+                modalImg.src = images[currentImageIndex];
+                updateImageCounter();
+            }
+    
+            function closeModal() {
+                modal.classList.remove('show');
+                setTimeout(() => modal.style.display = "none", 300);
+            }
+    
+            function changeImage(direction) {
+                modalImg.style.opacity = '0';
+                setTimeout(() => {
+                    currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
+                    modalImg.src = images[currentImageIndex];
+                    modalImg.style.opacity = '1';
+                    updateImageCounter();
+                }, 200);
+            }
+    
+            // Reviews Modal
+            const reviewsModal = document.getElementById("reviewsModal");
+            const viewAllReviewsBtn = document.getElementById("viewAllReviewsBtn");
+            const closeReviews = document.querySelector(".close-reviews");
+    
+            // When the user clicks the button, open the modal
+            viewAllReviewsBtn.onclick = function() {
+                reviewsModal.style.display = "block";
+                setTimeout(() => reviewsModal.classList.add('show'), 10);
+            }
+    
+            // When the user clicks on <span> (x), close the modal
+            closeReviews.onclick = function() {
+                reviewsModal.classList.remove('show');
+                setTimeout(() => reviewsModal.style.display = "none", 300);
+            }
+    
+            // Close modal when clicking outside the content
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    closeModal();
+                }
+                if (event.target == reviewsModal) {
+                    reviewsModal.classList.remove('show');
+                    setTimeout(() => reviewsModal.style.display = "none", 300);
+                }
+            }
+    
+            // Keyboard navigation
+            document.addEventListener('keydown', function(event) {
+                if (modal.style.display === "block") {
+                    if (event.key === "ArrowLeft") {
+                        changeImage(-1);
+                    } else if (event.key === "ArrowRight") {
+                        changeImage(1);
+                    } else if (event.key === "Escape") {
+                        closeModal();
+                    }
+                }
+    
+                if (reviewsModal.classList.contains('show') && event.key === "Escape") {
+                    reviewsModal.classList.remove('show');
+                    setTimeout(() => reviewsModal.style.display = "none", 300);
+                }
+            });
+    
+            // Add smooth transition for modal image
+            modalImg.style.transition = 'opacity 0.2s ease';
+    
+            // Dark Mode Toggle
+            function toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            }
+    
+            // Apply dark mode setting on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                }
+            });
+        </script>
+    </body>
+    </html>

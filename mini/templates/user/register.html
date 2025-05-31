@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        padding: 10px;
+        position: relative;
+        overflow-x: hidden;
+        perspective: 1000px;
+    }
+
+    .business-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wall.jpg-MrDmWviH7pGhyUAxMx37wvWglEXcGu.jpeg');
+        background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        z-index: 0;
+        animation: backgroundZoom 30s infinite alternate ease-in-out;
+    }
+
+    @keyframes backgroundZoom {
+        0% { background-size: 100% 100%; }
+        100% { background-size: 110% 110%; }
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.7); /* More transparency */
+        padding: 25px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 400px;
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(8px);
+        transform-style: preserve-3d;
+        animation: cardFloat 6s ease-in-out infinite;
+        box-shadow:
+            0 20px 40px rgba(0, 0, 0, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        margin: 10px auto;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        overflow: hidden;
+    }
+
+    /* Reflective glass effect */
+    .container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0) 60%
+        );
+        transform: rotate(30deg);
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.7;
+        animation: reflectionMove 8s infinite linear;
+    }
+
+    @keyframes reflectionMove {
+        0% { transform: rotate(30deg) translateY(0%); }
+        50% { transform: rotate(30deg) translateY(5%); }
+        100% { transform: rotate(30deg) translateY(0%); }
+    }
+
+    .container::after {
+        content: '';
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        border-top: 2px solid rgba(255, 255, 255, 0.6);
+        border-right: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 0 10px 0 0;
+        opacity: 0.4;
+    }
+
+    .corner-decoration {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+        border-left: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 0 0 0 10px;
+        opacity: 0.4;
+    }
+
+    h2 {
+        color: #000;
+        margin-bottom: 25px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        position: relative;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    }
+
+    h2::before, h2::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 3px;
+        border-radius: 2px;
+    }
+
+    h2::before {
+        width: 30px;
+        background: #000;
+    }
+
+    h2::after {
+        width: 60px;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: #000;
+        transform-origin: left;
+        transition: transform 0.3s ease;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .form-group:focus-within label {
+        transform: scale(1.05);
+        color: #000;
+    }
+
+    .input-wrapper {
+        position: relative;
+        transform-style: preserve-3d;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 12px;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+        transform-style: preserve-3d;
+        backdrop-filter: blur(4px);
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group input:focus {
+        border-color: rgba(255, 255, 255, 0.8);
+        outline: none;
+        background: rgba(255, 255, 255, 0.7);
+        transform: translateZ(10px);
+        box-shadow:
+            0 10px 20px rgba(0, 0, 0, 0.05),
+            inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        opacity: 0.6;
+        z-index: 2;
+    }
+
+    .password-toggle:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 14px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(4px);
+    }
+
+    button[type="submit"]::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 50%);
+        transform: scale(0);
+        transition: transform 0.6s ease-out;
+    }
+
+    button[type="submit"]:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow:
+            0 10px 20px rgba(0, 0, 0, 0.1),
+            0 3px 6px rgba(0, 0, 0, 0.05);
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    button[type="submit"]:hover::after {
+        transform: scale(1) rotate(45deg);
+    }
+
+    .messages {
+        margin-bottom: 20px;
+    }
+
+    .messages p {
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.05);
+        margin-bottom: 8px;
+        border-left: 4px solid rgba(0, 0, 0, 0.5);
+        font-size: 13px;
+        animation: messageSlide 0.5s ease forwards;
+        backdrop-filter: blur(4px);
+    }
+
+    .errorlist {
+        list-style: none;
+        padding: 10px 12px;
+        margin-top: 6px;
+        background: rgba(220, 53, 69, 0.2);
+        border-radius: 8px;
+        font-size: 12px;
+        color: #dc3545;
+        animation: errorSlide 0.3s ease forwards;
+        backdrop-filter: blur(4px);
+    }
+
+    .link-wrapper {
+        margin-top: 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .link-wrapper a {
+        color: #000;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        display: inline-block;
+        font-size: 13px;
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(4px);
+    }
+
+    .link-wrapper a::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background: rgba(0, 0, 0, 0.6);
+        transition: width 0.3s ease;
+    }
+
+    .link-wrapper a:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .link-wrapper a:hover::after {
+        width: calc(100% - 32px);
+    }
+
+    @keyframes cardFloat {
+        0%, 100% { transform: translateZ(0) translateY(0) rotateX(0deg); }
+        50% { transform: translateZ(20px) translateY(-10px) rotateX(2deg); }
+    }
+
+    @keyframes messageSlide {
+        from { transform: translateX(-20px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes errorSlide {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .input-highlight {
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 12px;
+        pointer-events: none;
+        background: radial-gradient(
+            circle at var(--x, 50%) var(--y, 50%),
+            rgba(255,255,255,0.3) 0%,
+            transparent 60%
+        );
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .form-group input:focus ~ .input-highlight {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Background particles */
+    .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* Reflective card effect */
+    .card-reflection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+        );
+        border-radius: 20px;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .container:hover .card-reflection {
+        opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 20px;
+            width: 95%;
+            max-width: 100%;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="business-background"></div>
+    <div class="particles" id="particles"></div>
+    <div class="container">
+        <div class="corner-decoration"></div>
+        <div class="card-reflection"></div>
+        <h2>Register</h2>
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    <div class="input-wrapper">
+                        {% if field.name == 'password1' or field.name == 'password2' %}
+                            <div style="position: relative;">
+                                {{ field }}
+                                <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                                    👁️
+                                </button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        <div class="input-highlight"></div>
+                    </div>
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Register</button>
+        </form>
+        <div class="link-wrapper">
+            <a href="{% url 'login' %}">Already have an account? Login</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(button) {
+            const input = button.parentElement.querySelector('input');
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🔒';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // Mouse tracking effect
+        document.querySelectorAll('.form-group input').forEach(input => {
+            input.addEventListener('mousemove', e => {
+                const rect = input.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                input.parentElement.style.setProperty('--x', `${x}%`);
+                input.parentElement.style.setProperty('--y', `${y}%`);
+            });
+        });
+
+        // Add tilt effect to login card
+        const container = document.querySelector('.container');
+        document.addEventListener('mousemove', e => {
+            if (!container) return;
+
+            const x = e.clientX;
+            const y = e.clientY;
+
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const deltaX = (x - centerX) / 30;
+            const deltaY = (y - centerY) / 30;
+
+            container.style.transform = `translateZ(0) rotateX(${-deltaY}deg) rotateY(${deltaX}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            if (!container) return;
+            container.style.transform = 'translateZ(0) rotateX(0) rotateY(0)';
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // Random size
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+
+                // Animation
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+
+                particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
+                particle.style.animationName = 'float';
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationIterationCount = 'infinite';
+                particle.style.animationTimingFunction = 'linear';
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Add this to the style section
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(0);
+                }
+                25% {
+                    transform: translateY(-20px) translateX(10px);
+                }
+                50% {
+                    transform: translateY(-40px) translateX(-10px);
+                }
+                75% {
+                    transform: translateY(-20px) translateX(5px);
+                }
+                100% {
+                    transform: translateY(0) translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Run once DOM is loaded
+        document.addEventListener('DOMContentLoaded', createParticles);
+    </script>
+</body>
+</html>
