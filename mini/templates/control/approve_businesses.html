@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Businesses</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+            animation: fadeIn 1s ease-out;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card-header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: right;
+        }
+        .card p {
+            margin: 10px 0;
+        }
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .image-gallery img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .image-gallery img:hover {
+            transform: scale(1.1);
+        }
+        .approve-btn, .reject-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .approve-btn {
+            background-color: #2ecc71;
+            color: white;
+            margin-right: 5px;
+        }
+        .reject-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .approve-btn:hover, .reject-btn:hover {
+            transform: translateY(-2px);
+        }
+        .approve-btn:active, .reject-btn:active {
+            transform: translateY(0);
+        }
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .fullscreen-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        .fullscreen-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .fullscreen-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 50px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .fullscreen-prev {
+            left: 30px;
+        }
+        .fullscreen-next {
+            right: 30px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Approve Businesses</h1>
+    <div class="card-container">
+        {% for business in businesses %}
+        <div class="card">
+            <div class="card-header">{{ business.name }}</div>
+            <div class="card-body">
+                <p><strong>Shop:</strong> {{ business.shop }}</p>
+                <p><strong>Mobile:</strong> {{ business.mobile_number }}</p>
+                <p><strong>Type:</strong> {{ business.business_type }}</p>
+                <p><strong>Address:</strong> {{ business.business_address }}</p>
+                <p><strong>Images:</strong></p>
+                <div class="image-gallery" data-business-id="{{ business.id }}">
+                    {% for image in business.images.all %}
+                        <img src="{{ image.image.url }}" alt="Business Image" loading="lazy" data-full-src="{{ image.image.url }}">
+                    {% endfor %}
+                </div>
+                <p><strong>Google Map:</strong> <a href="{{ business.google_map_location }}" target="_blank">View on Map</a></p>
+            </div>
+            <div class="card-footer">
+                <button class="approve-btn" data-id="{{ business.id }}">Approve</button>
+                <button class="reject-btn" data-id="{{ business.id }}">Reject</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="fullscreen-overlay">
+        <img src="/placeholder.svg" alt="Fullscreen Image" class="fullscreen-image">
+        <div class="fullscreen-close">&times;</div>
+        <div class="fullscreen-nav fullscreen-prev">&lt;</div>
+        <div class="fullscreen-nav fullscreen-next">&gt;</div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.card').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+            });
+
+            $(document).on('click', '.approve-btn, .reject-btn', function() {
+                const businessId = $(this).data('id');
+                const action = $(this).hasClass('approve-btn') ? 'approve' : 'reject';
+                const csrfToken = "{{ csrf_token }}";
+
+                $.ajax({
+                    url: "",
+                    method: "POST",
+                    data: {
+                        csrfmiddlewaretoken: csrfToken,
+                        business_id: businessId,
+                        action: action
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('An error occurred');
+                    }
+                });
+            });
+
+            // Fullscreen image viewer
+            let currentGallery = [];
+            let currentIndex = 0;
+
+            $('.image-gallery img').click(function() {
+                const businessId = $(this).closest('.image-gallery').data('business-id');
+                currentGallery = $(`.image-gallery[data-business-id="${businessId}"] img`).map(function() {
+                    return $(this).data('full-src');
+                }).get();
+                currentIndex = currentGallery.indexOf($(this).data('full-src'));
+                showFullscreenImage(currentGallery[currentIndex]);
+            });
+
+            $('.fullscreen-close').click(closeFullscreenImage);
+
+            $('.fullscreen-prev').click(function() {
+                currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+                showFullscreenImage(currentGallery[currentIndex]);
+            });
+
+            $('.fullscreen-next').click(function() {
+                currentIndex = (currentIndex + 1) % currentGallery.length;
+                showFullscreenImage(currentGallery[currentIndex]);
+            });
+
+            function showFullscreenImage(src) {
+                $('.fullscreen-image').attr('src', src);
+                $('.fullscreen-overlay').css('display', 'flex');
+            }
+
+            function closeFullscreenImage() {
+                $('.fullscreen-overlay').hide();
+            }
+
+            $(document).keydown(function(e) {
+                if ($('.fullscreen-overlay').is(':visible')) {
+                    if (e.key === "Escape") closeFullscreenImage();
+                    if (e.key === "ArrowLeft") $('.fullscreen-prev').click();
+                    if (e.key === "ArrowRight") $('.fullscreen-next').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
