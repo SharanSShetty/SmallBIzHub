@@ -54,7 +54,3 @@ mini/
    ```
    http://127.0.0.1:8000/
    ```
-
-## 📬 Contact
-
-For any queries or contributions, reach out to the project owner via email.
