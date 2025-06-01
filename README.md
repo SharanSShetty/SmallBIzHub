@@ -1,6 +1,6 @@
 # SmallBIzHub 🏪 – Business Directory Web App
 
-**SmallBiz** is a Django-based web application designed to help users discover, like, and interact with small businesses. The platform allows business owners to register and showcase their shops, while users can browse, search, and like businesses.
+**SmallBizHub** is a Django-based web application designed to help users discover, like, and interact with small businesses. The platform allows business owners to register and showcase their shops, while users can browse, search, and like businesses.
 
 ## 🚀 Features
 
