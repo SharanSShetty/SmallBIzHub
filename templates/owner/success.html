@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --background: #f9fafb;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .success-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            animation: scaleIn 0.5s 0.3s both cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .success-icon::before, .success-icon::after {
+            content: '';
+            position: absolute;
+            background-color: white;
+        }
+
+        .success-icon::before {
+            width: 4px;
+            height: 15px;
+            left: 28px;
+            top: 35px;
+            transform: rotate(45deg);
+            animation: drawCheck1 0.3s 0.8s both;
+        }
+
+        .success-icon::after {
+            width: 4px;
+            height: 30px;
+            left: 42px;
+            top: 25px;
+            transform: rotate(-45deg);
+            animation: drawCheck2 0.3s 0.8s both;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            animation: slideUp 0.5s 0.4s both;
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            animation: slideUp 0.5s 0.5s both;
+        }
+
+        .back-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            animation: slideUp 0.5s 0.6s both;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes drawCheck1 {
+            from { height: 0; }
+            to { height: 15px; }
+        }
+
+        @keyframes drawCheck2 {
+            from { height: 0; }
+            to { height: 30px; }
+        }
+
+        /* Confetti animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            opacity: 0;
+            animation: confetti 5s ease-in-out forwards;
+            z-index: -1;
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .success-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-icon"></div>
+        <h2>Message Sent Successfully!</h2>
+        <p>Your message has been sent to the admin. We will get back to you soon. Thank you for reaching out to us.</p>
+        <a href="{% url 'contact_us' %}" class="back-button">Go Back</a>
+    </div>
+
+    <script>
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+            const confettiCount = 100;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random position, color, size and delay
+                const size = Math.random() * 10 + 5;
+                const xPos = Math.random() * 100;
+                const delay = Math.random() * 3;
+                const duration = Math.random() * 3 + 3;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.left = `${xPos}%`;
+                confetti.style.backgroundColor = color;
+                confetti.style.animationDelay = `${delay}s`;
+                confetti.style.animationDuration = `${duration}s`;
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, (delay + duration) * 1000);
+            }
+        }
+        
+        // Run confetti animation when page loads
+        window.addEventListener('load', createConfetti);
+    </script>
+</body>
+</html>
